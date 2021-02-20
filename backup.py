@@ -35,7 +35,7 @@ def _help():
     )
 
 def repo_work():
-    csi = "bash ~/sm/cgit secman-ibk"
+    csi = "cgit secman-ibk"
     rdm = 'touch {}/README.md && echo "# My secman backup passwords - {}" >> {}/README.md'.format(
         SECDIR, SM_GH_UN, SECDIR)
 
@@ -108,10 +108,10 @@ def repo():
     return True
 
 def _ph():
-    os.system("{} && bash ~/sm/cgit ph".format(cd_SECDIR))
+    os.system("{} && cgit ph".format(cd_SECDIR))
 
 def _pl():
-    os.system("{} && bash ~/sm/cgit pl".format(cd_SECDIR))
+    os.system("{} && cgit pl".format(cd_SECDIR))
 
 def _clone():
     os.system(clone)
