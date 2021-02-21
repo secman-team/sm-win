@@ -8,7 +8,6 @@ def _n()
   ly = $l.cyan.bold
   nr = "\nthere's a new release of secman is avalaible:".yellow
   up = "to update it run".yellow
-  smu = "secman upd".blue
   scoop = "scoop upgrade secman".cyan
   puts new_r = "#{nr} #{ly}#{up} go to https://github.com/secman-team/secman/releases\nor if you install secman by scoop run #{scoop}"
 end
