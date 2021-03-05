@@ -1,0 +1,85 @@
+#!/bin/bash
+
+function usage() {
+    local us=(
+        "Flages:"
+        "   verx -h: help"
+        "   verx -d: about verx"
+        "   verx -v: verx version"
+        "Usage:"
+        "   Latest version:"
+        "       verx OWNER/REPO_NAME -l"
+        "   Current version:"
+        "    inside repo folder"
+        "       verx -c"
+    )
+
+    printf "%s\n" "${us[@]}"
+}
+
+latest() {
+    if [ -x "$(command -v curl)" ]; then
+        curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
+            grep '"tag_name":' |                                          # Get tag_name line
+            sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
+    fi
+}
+
+current() {
+    if [ -x "$(command -v git)" ]; then
+        git describe --abbrev=0 --tags
+    fi
+}
+
+sm() {
+    ruby -W0 /home/sm/v_checker.rb -c
+}
+
+sm_upg() {
+    ruby -W0 /home/sm/upg.rb
+}
+
+while (($#)); do
+    case "$1" in
+
+    --help | -h)
+        usage
+        exit 0
+        ;;
+
+    --version | -v)
+        verx abdfnx/verx -l
+        exit 0
+        ;;
+
+    -d)
+        echo "verx is a version checker"
+        exit 0
+        ;;
+
+    -c)
+        current
+        exit 0
+        ;;
+
+    --sm)
+        sm
+        exit 0
+        ;;
+    
+    --upg)
+        sm_upg
+        exit 0
+        ;;
+
+    esac
+
+    case "$2" in
+
+    -l)
+        latest $1
+        exit 0
+        ;;
+
+    esac
+done

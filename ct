@@ -1,0 +1,361 @@
+#!/bin/bash
+
+# variables
+cona="commit name: "
+brna="branch name: "
+repourl="repo url: "
+ver="cgit@1.0.4"
+crepo="Dev-x-Team/corgit"
+UNAME=$(uname)
+
+function usage() {
+    dollar="$"
+
+    local u=(
+        "Usage:"
+        "   cgit -h: help (this output)"
+        "   cgit -d: show description"
+        "   cgit -v: corgit version"
+        "   cgit -dv: show corgit repo"
+        "   cgit i: init \".git\" and push origin"
+        "   cgit s: status"
+        "   cgit sl: show the status of git by list view"
+        "   cgit e: push an existing repo"
+        "   cgit ph: push and commit"
+        "   cgit pl: fetch and pull"
+        " "
+        "Setup:"
+        "   /bin/bash -c \"$dollar(curl -fsSL https://raw.githubusercontent.com/Dev-x-Team/corgit/main/setup)\""
+        " "
+        "Uninstall:"
+        "   /bin/bash -c \"$dollar(curl -fsSL https://raw.githubusercontent.com/Dev-x-Team/corgit/main/un)\""
+        " "
+        "you can open an issue if you had any problem in https://github.com/Dev-x-Team/corgit/issues"
+    )
+
+    printf "%s\n" "${u[@]}"
+}
+
+function badUsage() {
+    local msg="$1"
+    local txt=(
+        "For an overview of the command, execute:"
+        "cgit -h"
+    )
+
+    [[ $msg ]] && printf "$msg\n"
+
+    printf "%s\n" "${txt[@]}"
+}
+
+function version() {
+    local v=(
+        "$ver"
+    )
+
+    printf "%s\n" "${v[@]}"
+}
+
+function desc() {
+    local d=(
+        "CorGit is a Cli program can automate init git, push commits and pull."
+    )
+
+    printf "%s\n" "${d[@]}"
+}
+
+ysa() {
+    # ysa = you should accept
+    echo "you should accept to install"
+    exit 0
+}
+
+initx() {
+    # init
+    git init
+    git add .
+
+    echo "$cona"
+    echo " "
+    read cn
+    git commit -m "$cn"
+
+    echo "$brna"
+    echo " "
+    read bn
+    git branch -M $bn
+
+    echo $repourl
+    echo " "
+    read url
+    git remote add origin $url
+
+    git push -u origin $bn
+}
+
+einit() {
+    # init
+    git init
+}
+
+noGit() {
+    # if the dic doesn't has .git folder
+    echo -e "There's no .git folder... so would you want to init it ?\n[Y/n]"
+    read -n 1 accept
+
+    if [[ $accept == "" || $accept == "Y" || $accept == "y" ]]; then
+        initx
+    else
+        ysa
+    fi
+}
+
+statusList() {
+    # show git status in list view
+
+    # if [ -x "$(command -v colorls)" ]; then
+    #     colorls --git-status
+
+    # else
+    #     echo -e "there's no colorls, you can install it by type\n gem install colorls"
+    # fi
+
+    if [[ "$UNAME" == "Linux" || "$UNAME" == "Darwin" ]]; then
+        if [ -x "$(command -v colorls)" ]; then
+            colorls -al --git-status
+
+        else
+            echo -e "there's no colorls\ndo you want to install it\n[Y/n]"
+            read -n 1 accept
+
+            if [[ $accept == "" || $accept == "Y" || $accept == "y" ]]; then
+                sudo gem install colorls
+
+                if [ -x "$(command -v colorls)" ]; then
+                    colorls -al --git-status
+                fi
+            else
+                ysa
+            fi
+        fi
+    else
+        echo "colorls does not support this system 😔"
+    fi
+}
+
+dvf() {
+    if [ -x "$(command -v gh)" ]; then
+        gh repo view $crepo
+
+    else
+        echo "there's no gh\ndo you want to install it\n[Y/n]"
+        read -n 1 accept
+
+        if [[ $accept == "" || $accept == "Y" || $accept == "y" ]]; then
+            if [[ "$UNAME" == "Linux" || "$UNAME" == "Darwin" ]]; then
+                if [ -x "$(command -v brew)" ]; then
+                    brew install gh
+                else
+                    echo "there's no brew\ndo you want to install it\n[Y/n]"
+                    read -n 1 accept
+
+                    if [[ $accept == "" || $accept == "Y" || $accept == "y" ]]; then
+                        if [ "$UNAME" == "Linux" ]; then
+                            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                        elif [ "$UNAME" == "Darwin" ]; then
+                            /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+                        fi
+
+                        if [ -x "$(command -v brew)" ]; then
+                            brew install gh
+                        fi
+                    else
+                        ysa
+                    fi
+                fi
+            fi
+        else
+            ysa
+        fi
+
+        if [ -x "$(command -v gh)" ]; then
+            gh repo view $crepo
+        fi
+    fi
+}
+
+pushx() {
+    # push
+    if [ -d ".git" ]; then
+        git status
+        git add .
+        echo $cona
+        echo " "
+        read cn
+        git commit -m "$cn"
+        git push
+    else
+        noGit
+    fi
+}
+
+pullx() {
+    # pull
+    if [ -d ".git" ]; then
+        git pull
+    else
+        einit
+    fi
+}
+
+status() {
+    # status
+    if [ -d ".git" ]; then
+        git status
+    else
+        noGit
+    fi
+}
+
+exrepo() {
+    if [ -d ".git" ]; then
+        echo "$repourl"
+        echo " "
+        read url
+
+        echo "$brna"
+        echo " "
+        read bn
+
+        git remote add origin $url
+        git branch -M $bn
+        git push -u origin $bn
+    else
+        einit
+    fi
+}
+
+smd() {
+    ruby -W0 /home/sm/msgs.rb $1
+}
+
+smd_w() {
+    smd -w
+}
+
+smd_s() {
+    smd -s
+}
+
+smd_c() {
+    smd -c
+}
+
+SM_GH_UN=$(git config user.name)
+
+secman-i() {
+    einit
+    git add .
+    git commit -m "new .secman repo"
+    git branch -M trunk
+    git remote add origin https://github.com/$SM_GH_UN/.secman
+    git push -u origin trunk
+}
+
+secman-i_bk() {
+    git add .
+    git commit -m "new .secman.bk repo"
+    git branch -M trunk
+    git remote add origin https://github.com/$SM_GH_UN/.secman.bk
+    git push -u origin trunk
+}
+
+while (($#)); do
+    case "$1" in
+
+    --help | -h)
+        usage
+        exit 0
+        ;;
+
+    --version | -v)
+        version
+        exit 0
+        ;;
+
+    --desc | --description | -d)
+        desc
+        exit 0
+        ;;
+
+    -dv)
+        dvf
+        exit 0
+        ;;
+    
+    --smd_w)
+        smd_w
+        exit 0
+        ;;
+
+    --smd_s)
+        smd_s
+        exit 0
+        ;;
+
+    --smd_c)
+        smd_c
+        exit 0
+        ;;
+
+    status | s)
+        status
+        exit 0
+        ;;
+
+    sl)
+        statusList
+        exit 0
+        ;;
+
+    init | i)
+        initx
+        exit 0
+        ;;
+    
+    secman-i)
+        secman-i
+        exit 0
+        ;;
+        
+    secman-ibk)
+        secman-i_bk
+        exit 0
+        ;;
+    
+    e)
+        exrepo
+        exit 0
+        ;;
+
+    push | ph)
+        pushx
+        exit 0
+        ;;
+
+    pull | pl)
+        pullx
+        exit 0
+        ;;
+
+    --smd)
+        bash /home/sm/vm $2
+        exit 0
+        ;;
+
+    *)
+        badUsage "Option/command not recognized."
+        exit 0
+        ;;
+    esac
+done
