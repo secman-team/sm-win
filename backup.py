@@ -26,7 +26,7 @@ def install(_url):
 
 install_brew = install("Homebrew/install/HEAD/install.sh")
 
-brew_gh = "brew install gh"
+brew_gh = "brew install gh"  
 choco_gh = "choco install gh"
 
 def _help():

@@ -7,9 +7,9 @@ $c = `secman verx`
 def _n()
   ly = $l.cyan.bold
   nr = "\nthere's a new release of secman is avalaible:".yellow
-  up = "to update it run".yellow
+  ug = "to upgrade".yellow
   scoop = "scoop upgrade secman".cyan
-  puts new_r = "#{nr} #{ly}#{up} go to https://github.com/secman-team/secman/releases\nor if you install secman by scoop run #{scoop}"
+  puts new_r = "#{nr} #{ly}#{ug} go to https://github.com/secman-team/secman/releases\nor if you install secman by scoop run #{scoop}"
 end
 
 def check()
