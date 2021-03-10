@@ -236,7 +236,7 @@ exrepo() {
 }
 
 smd() {
-    ruby -W0 /home/sm/msgs.rb $1
+    ruby /home/sm/msgs.rb $1
 }
 
 smd_w() {
