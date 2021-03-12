@@ -1,3 +1,8 @@
 $p=$args[0]
 
-bash $HOME\sm\vx $p
+$lastDir = pwd
+
+cd ~/sm
+bash vx $p
+
+cd $lastDir

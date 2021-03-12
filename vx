@@ -25,6 +25,14 @@ latest() {
     fi
 }
 
+secman() {
+    if [ -x "$(command -v curl)" ]; then
+        curl --silent "https://api.github.com/repos/secman-team/secman/releases/latest" | # Get latest release from GitHub api
+            grep '"tag_name":' |                                          # Get tag_name line
+            sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
+    fi
+}
+
 current() {
     if [ -x "$(command -v git)" ]; then
         git describe --abbrev=0 --tags
@@ -72,12 +80,8 @@ while (($#)); do
         exit 0
         ;;
 
-    esac
-
-    case "$2" in
-
     -l)
-        latest $1
+        secman
         exit 0
         ;;
 

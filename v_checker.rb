@@ -1,7 +1,7 @@
 require "optparse"
 require "colorize"
 
-$l = `~/sm/vx.ps1 secman-team/secman -l`
+$l = `& $Home/sm/vx.ps1 -l`
 $c = `secman verx`
 
 def _n()
@@ -13,7 +13,7 @@ def _n()
 end
 
 def check()
-  if $l != $c
+  if $l + "\n" != $c
     _n
   end
 end
