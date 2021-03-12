@@ -1,7 +1,7 @@
 require "optparse"
 require "colorize"
 
-$l = `verx secman-team/secman -l`
+$l = `~/sm/vx.ps1 secman-team/secman -l`
 $c = `secman verx`
 
 def _n()
