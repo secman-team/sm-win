@@ -6,15 +6,17 @@ cd ~/sm
 
 switch($p.ToLower()) {
     "--sm" {
-        ruby v_checker.rb -c
+        ruby v_checker.rb -c;
+        Break
     }
 
     "--upg" {
-        ruby upg.rb
+        ruby upg.rb;
+        Break
     }
 
-    default {
-        bash vx $p
+    "-l" {
+        bash sm.sh
     }
 }
 
