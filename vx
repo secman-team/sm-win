@@ -27,9 +27,7 @@ latest() {
 
 secman() {
     if [ -x "$(command -v curl)" ]; then
-        curl --silent "https://api.github.com/repos/secman-team/secman/releases/latest" | # Get latest release from GitHub api
-            grep '"tag_name":' |                                          # Get tag_name line
-            sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
+        curl --silent "https://api.github.com/repos/secman-team/secman/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
     fi
 }
 
@@ -37,14 +35,6 @@ current() {
     if [ -x "$(command -v git)" ]; then
         git describe --abbrev=0 --tags
     fi
-}
-
-sm() {
-    ruby ~/sm/v_checker.rb -c
-}
-
-sm_upg() {
-    ruby ~/sm/upg.rb
 }
 
 while (($#)); do
@@ -67,16 +57,6 @@ while (($#)); do
 
     -c)
         current
-        exit 0
-        ;;
-
-    --sm)
-        sm
-        exit 0
-        ;;
-    
-    --upg)
-        sm_upg
         exit 0
         ;;
 

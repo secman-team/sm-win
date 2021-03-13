@@ -1,7 +1,7 @@
 require "optparse"
 require "colorize"
 
-$l = `& $Home/sm/vx.ps1 -l`
+$l = `powershell.exe ./vx.ps1 -l`
 $c = `secman verx`
 
 def _n()
@@ -13,7 +13,7 @@ def _n()
 end
 
 def check()
-  if $l + "\n" != $c
+  if $l != $c
     _n
   end
 end
