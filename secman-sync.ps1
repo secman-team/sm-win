@@ -48,9 +48,13 @@ switch ($p.ToLower()) {
 
     {($_ -eq "ph") -or ($_ -eq "push")} {
         cd $SECDIR
-        git add .
-        git commit -m "new secman password"
-        git push
+
+        if (Test-Path -path .git) {
+            git add .
+            git commit -m "new change"
+            git push
+        }
+
         cd $lastDir
         Break
     }
